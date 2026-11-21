@@ -1,0 +1,31 @@
+#cloud-config
+timezone: ${timezone}
+
+users:
+  - name: ${username}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    lock_passwd: true
+%{ if length(ssh_public_keys) > 0 ~}
+    ssh_authorized_keys:
+%{ for key in ssh_public_keys ~}
+      - ${key}
+%{ endfor ~}
+%{ endif ~}
+
+package_update: true
+%{ if length(packages) > 0 ~}
+packages:
+%{ for pkg in packages ~}
+  - ${pkg}
+%{ endfor ~}
+%{ endif ~}
+
+growpart:
+  mode: auto
+  devices: ['/']
+  ignore_growroot_disabled: false
+
+${custom_user_data}
+
+final_message: "[Kraken] The system is up and cloud-init has finished after $UPTIME seconds"

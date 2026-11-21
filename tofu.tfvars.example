@@ -1,0 +1,50 @@
+# OpenTofu Variables Configuration Example for Libvirt KVM Ubuntu VMs
+# Copy this file to `tofu.tfvars` and customize for your environment.
+
+project             = "Kraken"
+libvirt_uri         = "qemu:///system"
+storage_pool_name   = "default"
+storage_pool_path   = "/var/lib/libvirt/images/"
+network_cidr        = "192.168.200.0/24"
+ssh_public_key_path = "~/.ssh/id_ed25519.pub"
+autostart           = true
+
+# Base Ubuntu Cloud Image URL (Resolute 26.04 or Noble 24.04 LTS)
+ubuntu_image_url = "https://cloud-images.ubuntu.com/releases/resolute/release/ubuntu-26.04-server-cloudimg-amd64.img"
+
+# Multi-node Virtual Machines configuration
+vms = {
+  # Example 1: Web server with static DHCP IP reservation
+  "web-01" = {
+    vcpu        = 2
+    memory      = 2048                      # 2 GiB
+    disk_size   = 21474836480               # 20 GiB (20 * 1024^3)
+    ip_address  = "192.168.200.10"
+    mac_address = "52:54:00:20:00:10"
+    username    = "ubuntu"
+    packages    = ["qemu-guest-agent", "curl", "nginx"]
+    autostart   = true
+  }
+
+  # Example 2: Database server with higher resources and static DHCP reservation
+  "db-01" = {
+    vcpu        = 4
+    memory      = 4096                      # 4 GiB
+    disk_size   = 42949672960               # 40 GiB (40 * 1024^3)
+    ip_address  = "192.168.200.20"
+    mac_address = "52:54:00:20:00:20"
+    username    = "ubuntu"
+    packages    = ["qemu-guest-agent", "htop"]
+    autostart   = true
+  }
+
+  # Example 3: Worker node using dynamic DHCP
+  "worker-01" = {
+    vcpu      = 2
+    memory    = 2048
+    disk_size = 10737418240                 # 10 GiB
+    username  = "ubuntu"
+    packages  = ["qemu-guest-agent"]
+    autostart = true
+  }
+}
