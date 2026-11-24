@@ -56,6 +56,32 @@ variable "username" {
   description = "Default cloud-init administrative user name"
 }
 
+variable "password" {
+  type        = string
+  default     = null
+  sensitive   = true
+  description = "Optional password for the administrative user account"
+}
+
+variable "sudo_require_password" {
+  type        = bool
+  default     = false
+  description = "Whether sudo commands require the user password (false = ALL=(ALL) NOPASSWD:ALL, true = ALL=(ALL) ALL)"
+
+  validation {
+    condition = (
+      var.sudo_require_password ? (var.password != null && var.password != "") : true
+    )
+    error_message = "If 'sudo_require_password' is set to true, 'password' must be specified."
+  }
+}
+
+variable "ssh_pwauth" {
+  type        = bool
+  default     = false
+  description = "Whether password authentication is permitted over SSH when a password is set"
+}
+
 variable "timezone" {
   type        = string
   default     = "UTC"

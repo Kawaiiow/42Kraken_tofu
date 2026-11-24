@@ -3,14 +3,23 @@ timezone: ${timezone}
 
 users:
   - name: ${username}
-    sudo: ALL=(ALL) NOPASSWD:ALL
+    sudo: ${sudo_rule}
     shell: /bin/bash
-    lock_passwd: true
+    lock_passwd: ${lock_passwd}
 %{ if length(ssh_public_keys) > 0 ~}
     ssh_authorized_keys:
 %{ for key in ssh_public_keys ~}
       - ${key}
 %{ endfor ~}
+%{ endif ~}
+
+%{ if password != null && password != "" ~}
+chpasswd:
+  list: |
+    ${username}:${password}
+  expire: false
+
+ssh_pwauth: ${ssh_pwauth}
 %{ endif ~}
 
 package_update: true

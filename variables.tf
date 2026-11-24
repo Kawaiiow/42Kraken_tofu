@@ -54,17 +54,20 @@ variable "network_cidr" {
 
 variable "vms" {
   type = map(object({
-    vcpu             = optional(number, 2)
-    memory           = optional(number, 2048)
-    disk_size        = optional(number, 10737418240)
-    ip_address       = optional(string)
-    mac_address      = optional(string)
-    username         = optional(string, "ubuntu")
-    timezone         = optional(string, "UTC")
-    packages         = optional(list(string), ["qemu-guest-agent"])
-    custom_user_data = optional(string, "")
-    autostart        = optional(bool)
-    wait_for_ip      = optional(bool, false)
+    vcpu                  = optional(number, 2)
+    memory                = optional(number, 2048)
+    disk_size             = optional(number, 10737418240)
+    ip_address            = optional(string)
+    mac_address           = optional(string)
+    username              = optional(string, "ubuntu")
+    password              = optional(string)
+    sudo_require_password = optional(bool, false)
+    ssh_pwauth            = optional(bool, false)
+    timezone              = optional(string, "UTC")
+    packages              = optional(list(string), ["qemu-guest-agent"])
+    custom_user_data      = optional(string, "")
+    autostart             = optional(bool)
+    wait_for_ip           = optional(bool, false)
   }))
   default = {
     "node-01" = {

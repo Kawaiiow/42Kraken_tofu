@@ -16,8 +16,16 @@ resource "libvirt_volume" "root" {
 }
 
 locals {
+  has_password = var.password != null && var.password != ""
+  lock_passwd  = !local.has_password
+  sudo_rule    = var.sudo_require_password ? "ALL=(ALL) ALL" : "ALL=(ALL) NOPASSWD:ALL"
+
   cloudinit_user_data = templatefile("${path.module}/templates/user_data.tftpl", {
     username         = var.username
+    password         = var.password
+    sudo_rule        = local.sudo_rule
+    lock_passwd      = local.lock_passwd
+    ssh_pwauth       = var.ssh_pwauth
     ssh_public_keys  = var.ssh_public_keys
     packages         = var.packages
     timezone         = var.timezone

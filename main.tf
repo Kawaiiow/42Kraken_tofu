@@ -27,19 +27,22 @@ module "vm" {
   source   = "./modules/vm"
   for_each = var.vms
 
-  vm_name           = "${var.project}-${each.key}"
-  vcpu              = each.value.vcpu
-  memory            = each.value.memory
-  disk_size         = each.value.disk_size
-  storage_pool_name = var.storage_pool_name
-  base_volume_path  = libvirt_volume.ubuntu_base.path
-  network_name      = module.network.network_name
-  mac_address       = each.value.mac_address
-  ssh_public_keys   = local.resolved_ssh_keys
-  username          = each.value.username
-  timezone          = each.value.timezone
-  packages          = each.value.packages
-  custom_user_data  = each.value.custom_user_data
-  autostart         = coalesce(each.value.autostart, var.autostart)
-  wait_for_ip       = each.value.wait_for_ip
+  vm_name               = "${var.project}-${each.key}"
+  vcpu                  = each.value.vcpu
+  memory                = each.value.memory
+  disk_size             = each.value.disk_size
+  storage_pool_name     = var.storage_pool_name
+  base_volume_path      = libvirt_volume.ubuntu_base.path
+  network_name          = module.network.network_name
+  mac_address           = each.value.mac_address
+  ssh_public_keys       = local.resolved_ssh_keys
+  username              = each.value.username
+  password              = each.value.password
+  sudo_require_password = each.value.sudo_require_password
+  ssh_pwauth            = each.value.ssh_pwauth
+  timezone              = each.value.timezone
+  packages              = each.value.packages
+  custom_user_data      = each.value.custom_user_data
+  autostart             = coalesce(each.value.autostart, var.autostart)
+  wait_for_ip           = each.value.wait_for_ip
 }

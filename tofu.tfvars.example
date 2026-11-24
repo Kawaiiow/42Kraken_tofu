@@ -14,7 +14,7 @@ ubuntu_image_url = "https://cloud-images.ubuntu.com/releases/resolute/release/ub
 
 # Multi-node Virtual Machines configuration
 vms = {
-  # Example 1: Web server with static DHCP IP reservation
+  # Example 1: Web server with static DHCP IP reservation and passwordless sudo (default)
   "web-01" = {
     vcpu        = 2
     memory      = 2048                      # 2 GiB
@@ -26,19 +26,22 @@ vms = {
     autostart   = true
   }
 
-  # Example 2: Database server with higher resources and static DHCP reservation
+  # Example 2: Database server with password-protected sudo and password set
   "db-01" = {
-    vcpu        = 4
-    memory      = 4096                      # 4 GiB
-    disk_size   = 42949672960               # 40 GiB (40 * 1024^3)
-    ip_address  = "192.168.200.20"
-    mac_address = "52:54:00:20:00:20"
-    username    = "ubuntu"
-    packages    = ["qemu-guest-agent", "htop"]
-    autostart   = true
+    vcpu                  = 4
+    memory                = 4096                      # 4 GiB
+    disk_size             = 42949672960               # 40 GiB (40 * 1024^3)
+    ip_address            = "192.168.200.20"
+    mac_address           = "52:54:00:20:00:20"
+    username              = "ubuntu"
+    password              = "Changeme!"       # Password for user & sudo
+    sudo_require_password = true                      # Enforces password prompt for sudo
+    ssh_pwauth            = false                     # Keep SSH key-only login for security
+    packages              = ["qemu-guest-agent", "htop"]
+    autostart             = true
   }
 
-  # Example 3: Worker node using dynamic DHCP
+  # Example 3: Worker node using dynamic DHCP and optional password
   "worker-01" = {
     vcpu      = 2
     memory    = 2048
